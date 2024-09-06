@@ -26,12 +26,10 @@
                     <td><a class="btn btn-link" asp-controller="categories" asp-action="delete" asp-route-categoryid="@category.CategoryID" onclick="return confirmDelete()">Delete</a></td>
                 </tr>
             }
-       
-
         </tbody>
     </table>
-    <a class="btn btn-primary" asp-controller="categories" asp-action="add">Add</a>
 }
+<a class="btn btn-primary" asp-controller="categories" asp-action="add">Add</a>
 
 @section Scripts{
     <script>
