@@ -73,5 +73,7 @@ namespace MarketManagment.Controllers
 
             return PartialView("_Products", products);
         }
+
+
     }
 }

@@ -12,7 +12,9 @@
 <br />
 
 <div class="row">
+    
     <div class="col-4">
+        <div class="text-danger" asp-validation-summary="All"></div>
         <select id="SelectedCategoryId" asp-for="SelectedCategoryId" class="form-control">
             <option>- Please Select -</option>
             @if (Model.Categories != null && Model.Categories.Count() > 0)
@@ -32,11 +34,32 @@
 
         <br />
 
-        <div>
+        <div id="detailsPartial">
             @* Product Details *@
         </div>
 
         @* Sales Form*@
+        <form method="post" asp-controller="sales" asp-action="sell" id="formSale">
+            <input type="hidden" asp-for="SelectedProductId" />
+            <div class="row mb-3">
+                <div class="col-2">
+                    <label asp-for="QuantityToSell" class="col-form-label"></label>
+                </div>
+                <div class="col-6">
+                    <input asp-for="QuantityToSell" min="1" type="number" class="form-control"  />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-2">
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                </div>
+
+                <div class="col-6">
+                </div>
+            </div>
+        </form>
+
     </div>
 
     <div class="col">
@@ -48,10 +71,21 @@
 @section Scripts{
     <script>
         $(function () {
+            //Initialize the form
+
+            $("#formSale").hide();
+            $("#QuantityToSell").val("");
+
+            // Load the products if category alr selected
+            var selectedCategoryId = $("#SelectedCategoryId").val();
+            if (selectedCategoryId > 0) {
+                loadProducts(selectedCategoryId);
+            }
 
             //Handles category selection
             $("#SelectedCategoryId").on("change", function () {
-                $("#productsPartial").load("/products/ProductsByCategoryPartial", { categoryId : $(this).val() });
+                loadProducts($(this).val())
+
             })
 
             //Handles product selection
@@ -59,8 +93,26 @@
                 //Highlighting the selected row
                     $(".product-row").removeClass ('highlight');
                     $(this).addClass('highlight');
+                   
+                    //Get product ID from the product-id attribute
+                var prodId = $(this).attr('product-id');
+                $("#detailsPartial").load("/sales/SellProductPartial", { productId: prodId });
+
+                if (prodId > 0) {
+                    $("#SelectedProductId").val(prodId);
+                    $("#formSale").show();
+                }else{
+                    $("#SelectedProductId").val("");
+                    $("#formSale").hide();
+                }
             });
 
         });
+        
+        function loadProducts(categoryId){
+            $("#productsPartial").load("/products/ProductsByCategoryPartial", { categoryId: categoryId });
+            $("#detailsPartial").html("");
+            $("#formSale").hide();
+        }
     </script>
 }
