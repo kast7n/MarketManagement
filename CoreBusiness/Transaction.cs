@@ -1,4 +1,4 @@
-﻿namespace MarketManagment.Models
+﻿namespace CoreBusiness
 {
     public class Transaction
     {

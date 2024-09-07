@@ -1,13 +1,15 @@
-﻿using MarketManagment.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using UseCases;
+using UseCases.ProductsUseCases;
 
-namespace MarketManagment.ViewModels.Validations
+namespace WebApp.ViewModels.Validations
 {
     public class SalesViewModel_EnsureProperQuantity : ValidationAttribute
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
             var salesViewModel = validationContext.ObjectInstance as SalesViewModel;
+
             if (salesViewModel != null)
             {
                 if (salesViewModel.QuantityToSell <= 0)
@@ -16,20 +18,24 @@ namespace MarketManagment.ViewModels.Validations
                 }
                 else
                 {
-                    var product = ProductsRepository.GetProductById(salesViewModel.SelectedProductId);
-                    if (product != null)
+                    var getProductByIdUseCase = validationContext.GetService(typeof(IViewSelectedProductUseCase)) as IViewSelectedProductUseCase;
+
+                    if (getProductByIdUseCase != null)
                     {
-                        if (product.Quantity < salesViewModel.QuantityToSell)
+                        var product = getProductByIdUseCase.Execute(salesViewModel.SelectedProductId);
+                        if (product != null)
                         {
-                            return new ValidationResult($"{product.Name} only has {product.Quantity} left. It is not enough");
+                            if (product.Quantity < salesViewModel.QuantityToSell)
+                                return new ValidationResult($"{product.Name} only has {product.Quantity} left. It is not enough.");
                         }
-                    }
-                    else
-                    {
-                        return new ValidationResult("The selected product doesn't exist.");
+                        else
+                        {
+                            return new ValidationResult("The selected product doesn't exist.");
+                        }
                     }
                 }
             }
+
             return ValidationResult.Success;
         }
     }

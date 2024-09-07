@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MarketManagment.Models
+namespace CoreBusiness
 {
     public class Product
     {

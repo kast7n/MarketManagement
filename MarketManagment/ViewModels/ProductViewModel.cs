@@ -1,5 +1,6 @@
-﻿using MarketManagment.Models;
-namespace MarketManagment.ViewModels
+﻿using CoreBusiness;
+
+namespace WebApp.ViewModels
 {
     public class ProductViewModel
     {

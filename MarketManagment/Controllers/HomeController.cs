@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace MarketManagment.Controllers
+namespace WebApp.Controllers
 {
     public class HomeController : Controller
     {

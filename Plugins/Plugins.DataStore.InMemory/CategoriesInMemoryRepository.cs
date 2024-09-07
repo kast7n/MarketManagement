@@ -1,15 +1,17 @@
-﻿namespace MarketManagment.Models
+﻿using CoreBusiness;
+using UseCases.DataStorePluginInterfaces;
+
+namespace Plugins.DataStore.InMemory
 {
-    public static class CategoriesRepository
+    public class CategoriesInMemoryRepository : ICategoryRepository
     {
-        private static List<Category> _categories = new List<Category>()
+        private  List<Category> _categories = new List<Category>()
         {
             new Category { CategoryID = 1, Name = "Beverage", Description = "Beverages and Drinks" },
             new Category { CategoryID = 2, Name = "Bakery", Description = "Bakery and Breakfast" },
             new Category { CategoryID = 3, Name = "Meat", Description = "Meat and BBQ" }
         };
-
-        public static void AddCategory(Category category)
+        public  void AddCategory(Category category)
         {
             if (_categories != null && _categories.Count > 0)
             {
@@ -20,7 +22,7 @@
             {
                 category.CategoryID = 1;
             }
-            if(_categories == null)
+            if (_categories == null)
             {
                 _categories = new List<Category>();
             }
@@ -28,9 +30,9 @@
         }
 
 
-        public static List<Category> GetCategories() => _categories;
+        public  IEnumerable<Category> GetCategories() => _categories;
 
-        public static Category? GetCategoryById(int categoryId)
+        public  Category? GetCategoryById(int categoryId)
         {
             var category = _categories.FirstOrDefault(x => x.CategoryID == categoryId);
             if (category != null)
@@ -46,25 +48,24 @@
         }
 
 
-        public static void UpdateCategory(int categoryId, Category category)
+        public  void UpdateCategory(int categoryId, Category category)
         {
             if (categoryId != category.CategoryID) return;
             var categoryToUpdate = _categories.FirstOrDefault(x => x.CategoryID == categoryId);
-            if(categoryToUpdate != null)
+            if (categoryToUpdate != null)
             {
                 categoryToUpdate.Name = category.Name;
                 categoryToUpdate.Description = category.Description;
             }
         }
 
-        public static void DeleteCategory(int categoryId)
+        public  void DeleteCategory(int categoryId)
         {
             var category = _categories.FirstOrDefault(x => x.CategoryID == categoryId);
-            if(category != null)
+            if (category != null)
             {
                 _categories.Remove(category);
             }
         }
-
     }
 }
