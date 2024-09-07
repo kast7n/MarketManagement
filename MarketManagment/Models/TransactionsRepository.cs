@@ -23,7 +23,6 @@
             {
                 return transactions.Where(x => x.CashierName.ToLower().Contains(cashierName.ToLower()) && x.TimeStamp >= startDate.Date && x.TimeStamp <= endDate.Date.AddDays(1));
             }
-
         }
 
         public static void Add(string cashierName,int productId,string productName,double price,int beforeQty,int soldQty)
