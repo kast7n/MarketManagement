@@ -23,7 +23,7 @@ namespace WebApp.Controllers
         public IActionResult Search(TransactionsViewModel transactionsViewModel)
         {
             var transactions = searchTransactionsUseCase.Execute(
-                transactionsViewModel.Cashier ?? string.Empty,
+                transactionsViewModel.CashierName ?? string.Empty,
                 transactionsViewModel.StartDate,
                 transactionsViewModel.EndDate);
 
