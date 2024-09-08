@@ -1,4 +1,5 @@
 ﻿using CoreBusiness;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCases;
 using UseCases.CategoriesUseCases;
@@ -8,6 +9,7 @@ using WebApp.ViewModels;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Policy ="Inventory")]
     public class ProductsController : Controller
     {
         private readonly IAddProductUseCase addProductUseCase;
@@ -16,7 +18,6 @@ namespace WebApp.Controllers
         private readonly IViewSelectedProductUseCase viewSelectedProductUseCase;
         private readonly IViewProductsUseCase viewProductsUseCase;
         private readonly IViewCategoriesUseCase viewCategoriesUseCase;
-        private readonly IViewProductsInCategoryUseCase viewProductsInCategoryUseCase;
 
         public ProductsController(
             IAddProductUseCase addProductUseCase,
@@ -24,8 +25,7 @@ namespace WebApp.Controllers
             IDeleteProductUseCase deleteProductUseCase,
             IViewSelectedProductUseCase viewSelectedProductUseCase,
             IViewProductsUseCase viewProductsUseCase,
-            IViewCategoriesUseCase viewCategoriesUseCase,
-            IViewProductsInCategoryUseCase viewProductsInCategoryUseCase)
+            IViewCategoriesUseCase viewCategoriesUseCase)
         {
             this.addProductUseCase = addProductUseCase;
             this.editProductUseCase = editProductUseCase;
@@ -33,7 +33,7 @@ namespace WebApp.Controllers
             this.viewSelectedProductUseCase = viewSelectedProductUseCase;
             this.viewProductsUseCase = viewProductsUseCase;
             this.viewCategoriesUseCase = viewCategoriesUseCase;
-            this.viewProductsInCategoryUseCase = viewProductsInCategoryUseCase;
+            
         }
 
         public IActionResult Index()
@@ -101,11 +101,6 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult ProductsByCategoryPartial(int categoryId)
-        {
-            var products = viewProductsInCategoryUseCase.Execute(categoryId);
 
-            return PartialView("_Products", products);
-        }
     }
 }

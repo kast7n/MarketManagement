@@ -6,6 +6,7 @@
         <div class="col-2"><label for="cashier">Cashier Name:</label></div>
         <div class="col-3">
             @* cashier name *@
+            @User?.Identity?.Name
         </div>
     </div>
 }
@@ -64,7 +65,7 @@
 
     <div class="col">
         @* List of transactions *@
-        @await Component.InvokeAsync("Transactions", "cashier1")
+        @await Component.InvokeAsync("Transactions", @User?.Identity?.Name)
     </div>
 </div>
 
@@ -111,7 +112,7 @@
         });
         
         function loadProducts(categoryId){
-            $("#productsPartial").load("/products/ProductsByCategoryPartial", { categoryId: categoryId });
+            $("#productsPartial").load("/sales/ProductsByCategoryPartial", { categoryId: categoryId });
             $("#detailsPartial").html("");
             $("#formSale").hide();
         }

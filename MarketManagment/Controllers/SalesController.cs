@@ -4,22 +4,27 @@ using WebApp.ViewModels;
 using UseCases.CategoriesUseCases;
 using UseCases;
 using UseCases.ProductsUseCases;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApp.Controllers
 {
+    [Authorize(Policy = "Cashiers")]
     public class SalesController : Controller
     {
         private readonly IViewCategoriesUseCase viewCategoriesUseCase;
         private readonly IViewSelectedProductUseCase viewSelectedProductUseCase;
         private readonly ISellProductUseCase sellProductUseCase;
+        private readonly IViewProductsInCategoryUseCase viewProductsInCategoryUseCase;
 
         public SalesController(IViewCategoriesUseCase viewCategoriesUseCase,
             IViewSelectedProductUseCase viewSelectedProductUseCase,
-            ISellProductUseCase sellProductUseCase)
+            ISellProductUseCase sellProductUseCase,
+            IViewProductsInCategoryUseCase viewProductsInCategoryUseCase)
         {
             this.viewCategoriesUseCase = viewCategoriesUseCase;
             this.viewSelectedProductUseCase = viewSelectedProductUseCase;
             this.sellProductUseCase = sellProductUseCase;
+            this.viewProductsInCategoryUseCase = viewProductsInCategoryUseCase;
         }
 
         public IActionResult Index()
@@ -43,7 +48,7 @@ namespace WebApp.Controllers
             {
                 // Sell the product
                 sellProductUseCase.Execute(
-                    "cashier1",
+                    cashierName: User?.Identity?.Name ?? "",
                     salesViewModel.SelectedProductId,
                     salesViewModel.QuantityToSell);
             }
@@ -53,6 +58,13 @@ namespace WebApp.Controllers
             salesViewModel.Categories = viewCategoriesUseCase.Execute();
 
             return View("Index", salesViewModel);
+        }
+
+        public IActionResult ProductsByCategoryPartial(int categoryId)
+        {
+            var products = viewProductsInCategoryUseCase.Execute(categoryId);
+
+            return PartialView("_Products", products);
         }
     }
 }
